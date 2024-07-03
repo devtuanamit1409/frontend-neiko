@@ -1,0 +1,38 @@
+.product-card {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+}
+
+.product-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+.price-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.retail-price {
+  color: #ff4d4f; /* Màu đỏ cho giá lẻ */
+}
+
+.wholesale-price {
+  color: #52c41a; /* Màu xanh lá cho giá sỉ */
+}
+
+.add-to-cart-button {
+  background-color: #1890ff; /* Màu xanh chủ đạo của Ant Design */
+  border: none;
+}
+
+.add-to-cart-button:hover {
+  background-color: #40a9ff;
+}

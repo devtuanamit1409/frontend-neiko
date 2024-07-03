@@ -1,0 +1,86 @@
+.product-detail-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.product-detail-container {
+  max-width: 1200px;
+  width: 100%;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.product-image {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.product-detail-card {
+  padding: 20px;
+}
+
+.product-description {
+  list-style: none;
+  padding: 0;
+}
+
+.product-description li {
+  margin-bottom: 10px;
+}
+
+.product-options {
+  margin-top: 20px;
+}
+
+.product-option {
+  margin-bottom: 20px;
+}
+
+.product-quantity {
+  margin: 20px 0;
+}
+
+.product-icons p {
+  margin: 0;
+}
+
+.custom-radio-button {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 8px 16px;
+  transition: all 0.3s;
+  margin-right: 8px;
+}
+
+.custom-radio-button:hover {
+  background-color: #f0f0f0;
+  border-color: #40a9ff;
+}
+
+.custom-radio-button-checked {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  color: white;
+}
+.custom-radio-button {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 8px 16px;
+  transition: all 0.3s;
+  margin-right: 8px;
+}
+
+.custom-radio-button:hover {
+  background-color: #f0f0f0;
+  border-color: #40a9ff;
+}
+
+.custom-radio-button-checked {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  color: white;
+}

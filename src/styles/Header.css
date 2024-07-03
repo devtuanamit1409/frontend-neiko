@@ -1,0 +1,47 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #001529; /* Màu nền header */
+  padding: 0 20px;
+  height: 64px; /* Chiều cao của header */
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  top: 0;
+}
+
+.logo {
+  font-size: 24px;
+  color: #fff;
+  flex: 0 0 auto;
+}
+
+.menu {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 1;
+  background: none;
+  border-bottom: none;
+  height: 100%;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  border-bottom: none;
+  height: 100%;
+}
+
+.menu .ant-menu-item {
+  border-bottom: none;
+}
+
+.menu .ant-menu-item:hover {
+  background: none;
+}
+
+.menu .ant-menu-item .anticon {
+  vertical-align: middle;
+}
