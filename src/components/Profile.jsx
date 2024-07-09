@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { Card, Typography, Button, List, Modal } from "antd";
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  Typography,
+  Button,
+  List,
+  Modal,
+  notification,
+  Pagination,
+} from "antd";
 import {
   UserOutlined,
   PhoneOutlined,
@@ -7,61 +15,89 @@ import {
   HomeOutlined,
   ShareAltOutlined,
   WalletOutlined,
-  EditOutlined,
-  ShoppingOutlined,
-  DeleteOutlined,
   EyeOutlined,
+  LogoutOutlined,
+  DeleteOutlined,
+  ShoppingOutlined,
 } from "@ant-design/icons";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
 const Profile = () => {
-  // Example user data
-  const [user] = useState({
-    username: "john_doe",
-    fullName: "John Doe",
-    phone: "0912345678",
-    email: "john.doe@example.com",
-    address: "123 Main St, Hanoi, Vietnam",
-    referralCode: "REF12345",
-    balance: 1500000,
-  });
-
-  // Example order data
-  const [orders, setOrders] = useState([
-    {
-      id: "123456",
-      date: "2023-01-01",
-      total: 385000,
-      status: "Đã giao",
-      items: [
-        { name: "Sản phẩm 1", quantity: 1, price: 100000 },
-        { name: "Sản phẩm 2", quantity: 2, price: 142500 },
-      ],
-    },
-    {
-      id: "654321",
-      date: "2023-02-15",
-      total: 245000,
-      status: "Đang xử lý",
-      items: [{ name: "Sản phẩm 3", quantity: 1, price: 245000 }],
-    },
-  ]);
-
+  const [user, setUser] = useState({});
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    getUserData();
+    getUserOrders(page);
+  }, [page]);
+
+  const getUserData = async () => {
+    try {
+      const response = await axios.get(
+        `https://api-neiko.site/api/users/${userId}`
+      );
+      setUser(response.data.user);
+    } catch (error) {
+      notification.error({
+        message: "Lỗi",
+        description: "Có lỗi xảy ra khi lấy thông tin người dùng",
+      });
+    }
+  };
+
+  const getUserOrders = async (page = 1, limit = 10) => {
+    try {
+      const response = await axios.get(
+        `https://api-neiko.site/api/orders/${userId}`,
+        {
+          params: { page, limit },
+        }
+      );
+      setOrders(response.data.orders);
+      setTotalOrders(response.data.totalOrders);
+    } catch (error) {
+      notification.error({
+        message: "Lỗi",
+        description: "Có lỗi xảy ra khi lấy danh sách đơn hàng",
+      });
+    }
+  };
 
   const handleViewOrder = (order) => {
     setSelectedOrder(order);
   };
 
-  const handleDeleteOrder = (id) => {
-    setOrders(orders.filter((order) => order.id !== id));
+  const handleDeleteOrder = async (id) => {
+    try {
+      await axios.delete(`https://api-neiko.site/api/orders/${id}`);
+      setOrders(orders.filter((order) => order._id !== id));
+      notification.success({
+        message: "Thành công",
+        description: "Đơn hàng đã được xóa",
+      });
+    } catch (error) {
+      notification.error({
+        message: "Lỗi",
+        description: "Có lỗi xảy ra khi xóa đơn hàng",
+      });
+    }
   };
 
   const handleModalClose = () => {
     setSelectedOrder(null);
   };
-
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    navigate("/");
+  };
   return (
     <div className="container mx-auto p-4 mt-[70px]">
       <Title level={2} className="mb-4 text-center">
@@ -80,7 +116,7 @@ const Profile = () => {
             <UserOutlined className="text-xl mr-2 text-blue-500" />
             <div>
               <Text strong>Họ tên:</Text>
-              <Text className="block">{user.fullName}</Text>
+              <Text className="block">{user.name}</Text>
             </div>
           </div>
           <div className="flex items-center">
@@ -108,24 +144,25 @@ const Profile = () => {
             <ShareAltOutlined className="text-xl mr-2 text-purple-500" />
             <div>
               <Text strong>Mã giới thiệu:</Text>
-              <Text className="block">{user.referralCode}</Text>
+              <Text className="block">{user.code}</Text>
             </div>
           </div>
           <div className="flex items-center">
             <WalletOutlined className="text-xl mr-2 text-orange-500" />
             <div>
               <Text strong>Số dư:</Text>
-              <Text className="block">{user.balance.toLocaleString()} đ</Text>
+              <Text className="block">{user.balance?.toLocaleString()} đ</Text>
             </div>
           </div>
         </div>
         <div className="flex justify-center mb-6">
           <Button
+            onClick={() => handleLogout()}
             type="primary"
             className="bg-blue-500 text-white"
-            icon={<EditOutlined />}
+            icon={<LogoutOutlined />}
           >
-            Chỉnh sửa thông tin
+            Đăng Xuất
           </Button>
         </div>
         <Title level={3} className="mb-4 text-center">
@@ -136,40 +173,54 @@ const Profile = () => {
           dataSource={orders}
           renderItem={(order) => (
             <List.Item
-              key={order.id}
-              actions={[
-                <Button
-                  key={order.id}
-                  icon={<EyeOutlined />}
-                  onClick={() => handleViewOrder(order)}
-                >
-                  Xem
-                </Button>,
-                <Button
-                  key={order.id}
-                  icon={<DeleteOutlined />}
-                  onClick={() => handleDeleteOrder(order.id)}
-                  danger
-                >
-                  Xóa
-                </Button>,
-              ]}
+              key={order._id}
+              // actions={[
+              //   <Button
+              //     key={order._id}
+              //     icon={<EyeOutlined />}
+              //     onClick={() => handleViewOrder(order)}
+              //   >
+              //     Xem
+              //   </Button>,
+              //   <Button
+              //     key={order._id}
+              //     icon={<DeleteOutlined />}
+              //     onClick={() => handleDeleteOrder(order._id)}
+              //     danger
+              //   >
+              //     Xóa
+              //   </Button>,
+              // ]}
               extra={<ShoppingOutlined className="text-4xl text-blue-500" />}
             >
               <List.Item.Meta
-                title={<Text strong>ID Đơn hàng: {order.id}</Text>}
+                title={<Text strong>ID Đơn hàng: {order._id}</Text>}
                 description={
                   <>
-                    <Text>Ngày đặt hàng: {order.date}</Text>
+                    <Text>
+                      Ngày đặt hàng:{" "}
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </Text>
                     <br />
-                    <Text>Tổng tiền: {order.total.toLocaleString()} đ</Text>
+                    <Text>
+                      Tổng tiền: {order.totalPrice.toLocaleString()} đ
+                    </Text>
                     <br />
-                    <Text>Trạng thái: {order.status}</Text>
+                    <Text>
+                      Trạng thái: {order.isDelivered ? "Đã giao" : "Đang xử lý"}
+                    </Text>
                   </>
                 }
               />
             </List.Item>
           )}
+        />
+        <Pagination
+          current={page}
+          pageSize={10}
+          total={totalOrders}
+          onChange={(page) => setPage(page)}
+          className="text-center mt-4"
         />
       </Card>
 
@@ -185,34 +236,54 @@ const Profile = () => {
       >
         {selectedOrder && (
           <div>
-            <Text strong>ID Đơn hàng: {selectedOrder.id}</Text>
+            <Text strong>ID Đơn hàng: {selectedOrder._id}</Text>
             <br />
-            <Text>Ngày đặt hàng: {selectedOrder.date}</Text>
+            <Text>
+              Ngày đặt hàng:{" "}
+              {new Date(selectedOrder.createdAt).toLocaleDateString()}
+            </Text>
             <br />
-            <Text>Tổng tiền: {selectedOrder.total.toLocaleString()} đ</Text>
+            <Text>
+              Tổng tiền: {selectedOrder.totalPrice.toLocaleString()} đ
+            </Text>
             <br />
-            <Text>Trạng thái: {selectedOrder.status}</Text>
+            <Text>
+              Trạng thái: {selectedOrder.isDelivered ? "Đã giao" : "Đang xử lý"}
+            </Text>
             <br />
             <Title level={4} className="mt-4">
               Sản phẩm
             </Title>
             <List
               itemLayout="horizontal"
-              dataSource={selectedOrder.items}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    title={<Text>{item.name}</Text>}
-                    description={
-                      <>
-                        <Text>Số lượng: {item.quantity}</Text>
-                        <br />
-                        <Text>Giá: {item.price.toLocaleString()} đ</Text>
-                      </>
-                    }
-                  />
-                </List.Item>
-              )}
+              dataSource={selectedOrder.orderItems}
+              renderItem={(item) => {
+                const product = item.product || {};
+                const sizeInfo = product.sizeInfo || [];
+                const sizeDetail =
+                  sizeInfo.find((si) => si.size === item.size) || {};
+
+                return (
+                  <List.Item>
+                    <List.Item.Meta
+                      title={<Text>{product.name}</Text>}
+                      description={
+                        <>
+                          <Text>Số lượng: {item.qty}</Text>
+                          <br />
+                          <Text>
+                            Giá:{" "}
+                            {sizeDetail.retailPrice
+                              ? sizeDetail.retailPrice.toLocaleString()
+                              : "N/A"}{" "}
+                            đ
+                          </Text>
+                        </>
+                      }
+                    />
+                  </List.Item>
+                );
+              }}
             />
           </div>
         )}

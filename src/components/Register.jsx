@@ -1,20 +1,47 @@
 import React from "react";
-import { Form, Input, Button, Card } from "antd";
+import { Form, Input, Button, Card, notification } from "antd";
 import {
   UserOutlined,
   LockOutlined,
-  MailOutlined,
   PhoneOutlined,
   IdcardOutlined,
   HomeOutlined,
   NumberOutlined,
 } from "@ant-design/icons";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
-import { Link } from "react-router-dom";
 
 const Register = () => {
-  const onFinish = (values) => {
+  const navigate = useNavigate();
+
+  const onFinish = async (values) => {
     console.log("Received values of form: ", values);
+    try {
+      const { data } = await axios.post(
+        "https://api-neiko.site/api/users/create",
+        {
+          username: values.username,
+          name: values.fullname,
+          password: values.password,
+          phone: values.phone,
+          address: values.address,
+          aboutCode: values.workCode,
+          level: "client", // Add default level
+        }
+      );
+      notification.success({
+        message: "Đăng ký thành công",
+        description: data.message,
+      });
+      navigate("/");
+    } catch (error) {
+      notification.error({
+        message: "Lỗi Đăng ký",
+        description:
+          error.response?.data?.message || "Có lỗi xảy ra khi đăng ký.",
+      });
+    }
   };
 
   return (
@@ -66,18 +93,6 @@ const Register = () => {
             />
           </Form.Item>
           <Form.Item
-            name="email"
-            rules={[
-              { required: true, message: "Mời bạn nhập email!" },
-              { type: "email", message: "Email không hợp lệ!" },
-            ]}
-          >
-            <Input
-              prefix={<MailOutlined className="site-form-item-icon" />}
-              placeholder="Email"
-            />
-          </Form.Item>
-          <Form.Item
             name="phone"
             rules={[{ required: true, message: "Mời bạn nhập số điện thoại!" }]}
           >
@@ -122,7 +137,7 @@ const Register = () => {
               Đăng ký
             </Button>
             <div className="login-link">
-              <Link to="/login">Đã có tài khoản? Đăng nhập ngay</Link>
+              <Link to="/">Đã có tài khoản? Đăng nhập ngay</Link>
             </div>
           </Form.Item>
         </Form>
