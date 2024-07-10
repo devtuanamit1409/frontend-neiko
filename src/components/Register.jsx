@@ -19,7 +19,7 @@ const Register = () => {
     console.log("Received values of form: ", values);
     try {
       const { data } = await axios.post(
-        "https://api-neiko.site/api/users/create",
+        "http://localhost:8888/api/users/create",
         {
           username: values.username,
           name: values.fullname,

@@ -25,7 +25,7 @@ const Checkout = () => {
   const getUserCart = async () => {
     try {
       const response = await axios.get(
-        `https://api-neiko.site/api/users/${userId}`
+        `http://localhost:8888/api/users/${userId}`
       );
       setUser(response.data.user);
       setCartItems(response.data.user.cart);
@@ -51,7 +51,13 @@ const Checkout = () => {
       const sizeDetail = item.product.sizeInfo.find(
         (si) => si.size === item.size
       );
-      const price = sizeDetail.retailPrice;
+      const price =
+        user.level === "client"
+          ? sizeDetail.retailPrice
+          : user.level === "agency"
+          ? sizeDetail.wholesalePrice
+          : sizeDetail.defaultPrice;
+
       return acc + price * item.quantity;
     }, 0);
   };
@@ -76,7 +82,7 @@ const Checkout = () => {
         note: values.note,
       };
 
-      await axios.post(`https://api-neiko.site/api/orders/create`, order);
+      await axios.post(`http://localhost:8888/api/orders/create`, order);
       notification.success({
         message: "Thành công",
         description: "Đơn hàng của bạn đã được đặt thành công",
@@ -167,16 +173,25 @@ const Checkout = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <img
-                      src={"https://api-neiko.site/" + item.product.image}
+                      src={"http://localhost:8888/" + item.product.image}
                       alt={item.product.name}
                       className="w-16 h-16 mr-4 rounded"
                     />
                     <div>
                       <Text strong>{item.product.name}</Text>
                       <Text className="block">
-                        {item.product.sizeInfo
-                          .find((si) => si.size === item.size)
-                          .retailPrice.toLocaleString("vi-VN")}{" "}
+                        {(user.level === "client"
+                          ? item.product.sizeInfo.find(
+                              (si) => si.size === item.size
+                            ).retailPrice
+                          : user.level === "agency"
+                          ? item.product.sizeInfo.find(
+                              (si) => si.size === item.size
+                            ).wholesalePrice
+                          : item.product.sizeInfo.find(
+                              (si) => si.size === item.size
+                            ).defaultPrice
+                        ).toLocaleString("vi-VN")}
                         đ x {item.quantity}
                       </Text>
                     </div>

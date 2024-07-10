@@ -26,7 +26,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     try {
-      await axios.post(`https://api-neiko.site/api/users/addtocart`, {
+      await axios.post(`http://localhost:8888/api/users/addtocart`, {
         userId,
         productId: id,
         quantity,
@@ -47,7 +47,7 @@ const ProductDetail = () => {
   const getUser = async () => {
     try {
       const response = await axios.get(
-        `https://api-neiko.site/api/users/${userId}`
+        `http://localhost:8888/api/users/${userId}`
       );
       setUser(response.data.user);
     } catch (error) {
@@ -58,7 +58,7 @@ const ProductDetail = () => {
   const getProduct = async () => {
     try {
       const response = await axios.get(
-        `https://api-neiko.site/api/products/${id}`
+        `http://localhost:8888/api/products/${id}`
       );
       const productData = response.data.product;
       setProduct(productData);
@@ -72,14 +72,16 @@ const ProductDetail = () => {
 
   const updatePrice = (selectedSize, level) => {
     if (!product) return;
-    console.log("Updating price for size:", selectedSize, "and level:", level);
+
     const sizeInfo = product.sizeInfo.find((s) => s.size === selectedSize);
-    console.log("Selected size info:", sizeInfo);
+
     const newPrice =
       level === "client"
         ? sizeInfo.retailPrice
-        : sizeInfo.wholesalePrice || sizeInfo.defaultPrice;
-    console.log("New price:", newPrice);
+        : level === "agency"
+        ? sizeInfo.wholesalePrice
+        : sizeInfo.defaultPrice;
+
     setPrice(newPrice);
   };
 
@@ -101,13 +103,15 @@ const ProductDetail = () => {
     }).format(price);
   };
 
+  console.log(user.level);
+
   return (
     <div className="container mx-auto p-4 mt-[70px]">
       {product && (
         <div className="flex flex-wrap justify-center">
           <div className="w-full lg:w-1/2 p-2">
             <img
-              src={`https://api-neiko.site/${product.image}`}
+              src={`http://localhost:8888/${product.image}`}
               alt="Product"
               className="rounded-lg w-full"
             />

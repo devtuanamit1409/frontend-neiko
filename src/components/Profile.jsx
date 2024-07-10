@@ -42,7 +42,7 @@ const Profile = () => {
   const getUserData = async () => {
     try {
       const response = await axios.get(
-        `https://api-neiko.site/api/users/${userId}`
+        `http://localhost:8888/api/users/${userId}`
       );
       setUser(response.data.user);
     } catch (error) {
@@ -56,7 +56,7 @@ const Profile = () => {
   const getUserOrders = async (page = 1, limit = 10) => {
     try {
       const response = await axios.get(
-        `https://api-neiko.site/api/orders/${userId}`,
+        `http://localhost:8888/api/orders/${userId}`,
         {
           params: { page, limit },
         }
@@ -77,7 +77,7 @@ const Profile = () => {
 
   const handleDeleteOrder = async (id) => {
     try {
-      await axios.delete(`https://api-neiko.site/api/orders/${id}`);
+      await axios.delete(`http://localhost:8888/api/orders/${id}`);
       setOrders(orders.filter((order) => order._id !== id));
       notification.success({
         message: "Thành công",
@@ -174,23 +174,6 @@ const Profile = () => {
           renderItem={(order) => (
             <List.Item
               key={order._id}
-              // actions={[
-              //   <Button
-              //     key={order._id}
-              //     icon={<EyeOutlined />}
-              //     onClick={() => handleViewOrder(order)}
-              //   >
-              //     Xem
-              //   </Button>,
-              //   <Button
-              //     key={order._id}
-              //     icon={<DeleteOutlined />}
-              //     onClick={() => handleDeleteOrder(order._id)}
-              //     danger
-              //   >
-              //     Xóa
-              //   </Button>,
-              // ]}
               extra={<ShoppingOutlined className="text-4xl text-blue-500" />}
             >
               <List.Item.Meta

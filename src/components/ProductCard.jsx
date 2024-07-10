@@ -21,7 +21,7 @@ const ProductCard = ({ product }) => {
   const getUser = async () => {
     try {
       const response = await axios.get(
-        `https://api-neiko.site/api/users/${userId}`
+        `http://localhost:8888/api/users/${userId}`
       );
       setUser(response.data.user);
     } catch (error) {
@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
       cover={
         <img
           alt={product.name}
-          src={"https://api-neiko.site/" + product.image}
+          src={"http://localhost:8888/" + product.image}
           className="product-image"
         />
       }
@@ -52,8 +52,9 @@ const ProductCard = ({ product }) => {
           Giá :{" "}
           {user && user.level === "client"
             ? formatCurrency(product.sizeInfo[0].retailPrice)
-            : formatCurrency(product.sizeInfo[0].wholesalePrice) ||
-              formatCurrency(product.sizeInfo[0].defaultPrice)}
+            : user && user.level === "agency"
+            ? formatCurrency(product.sizeInfo[0].wholesalePrice)
+            : formatCurrency(product.sizeInfo[0].defaultPrice)}
         </div>
         {/* <div className="wholesale-price">
           Giá sỉ: {formatCurrency(product.wholesalePrice)}

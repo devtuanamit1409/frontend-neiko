@@ -14,7 +14,7 @@ const Cart = () => {
   const getUser = async () => {
     try {
       const response = await axios.get(
-        `https://api-neiko.site/api/users/${userId}`
+        `http://localhost:8888/api/users/${userId}`
       );
       setUser(response.data.user);
       setCartItems(response.data.user.cart);
@@ -25,7 +25,7 @@ const Cart = () => {
 
   const handleRemoveItem = async (id) => {
     try {
-      await axios.delete(`https://api-neiko.site/api/users/removecartitem`, {
+      await axios.delete(`http://localhost:8888/api/users/removecartitem`, {
         data: { userId, itemId: id },
       });
       const newCartItems = cartItems.filter((item) => item._id !== id);
@@ -51,7 +51,10 @@ const Cart = () => {
       const price =
         user.level === "client"
           ? sizeDetail.retailPrice
-          : sizeDetail.wholesalePrice || sizeDetail.defaultPrice;
+          : user.level === "agency"
+          ? sizeDetail.wholesalePrice
+          : sizeDetail.defaultPrice;
+
       return acc + price * item.quantity;
     }, 0);
   };
@@ -75,7 +78,7 @@ const Cart = () => {
             >
               <div className="flex items-center">
                 <img
-                  src={"https://api-neiko.site/" + item.product.image}
+                  src={"http://localhost:8888/" + item.product.image}
                   alt={item.product.name}
                   className="w-16 h-16 mr-4 rounded"
                 />
@@ -84,16 +87,18 @@ const Cart = () => {
                     {item.product.name}
                   </Text>
                   <Text className="block text-gray-500">
-                    {user.level === "client"
-                      ? item.product.sizeInfo
-                          .find((si) => si.size === item.size)
-                          .retailPrice.toLocaleString("vi-VN")
-                      : item.product.sizeInfo
-                          .find((si) => si.size === item.size)
-                          .wholesalePrice.toLocaleString("vi-VN") ||
-                        item.product.sizeInfo
-                          .find((si) => si.size === item.size)
-                          .defaultPrice.toLocaleString("vi-VN")}{" "}
+                    {(user.level === "client"
+                      ? item.product.sizeInfo.find(
+                          (si) => si.size === item.size
+                        ).retailPrice
+                      : user.level === "agency"
+                      ? item.product.sizeInfo.find(
+                          (si) => si.size === item.size
+                        ).wholesalePrice
+                      : item.product.sizeInfo.find(
+                          (si) => si.size === item.size
+                        ).defaultPrice
+                    ).toLocaleString("vi-VN")}
                     đ
                   </Text>
                   <Text className="block text-gray-500">Size: {item.size}</Text>
@@ -113,9 +118,10 @@ const Cart = () => {
                   {(user.level === "client"
                     ? item.product.sizeInfo.find((si) => si.size === item.size)
                         .retailPrice
+                    : user.level === "agency"
+                    ? item.product.sizeInfo.find((si) => si.size === item.size)
+                        .wholesalePrice
                     : item.product.sizeInfo.find((si) => si.size === item.size)
-                        .wholesalePrice ||
-                      item.product.sizeInfo.find((si) => si.size === item.size)
                         .defaultPrice
                   ).toLocaleString("vi-VN")}
                   đ x {item.quantity}

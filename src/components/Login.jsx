@@ -18,7 +18,7 @@ const Login = () => {
     console.log("Received values of form: ", values);
     try {
       const { data } = await axios.post(
-        "https://api-neiko.site/api/users/login",
+        "http://localhost:8888/api/users/login",
         {
           username: values.username,
           password: values.password,
