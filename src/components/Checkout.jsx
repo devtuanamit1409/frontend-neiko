@@ -47,6 +47,7 @@ const Checkout = () => {
 
   const calculateTotalAmount = () => {
     return cartItems.reduce((acc, item) => {
+      if (!item.product) return acc; // Bỏ qua sản phẩm có giá trị null
       const sizeDetail = item.product.sizeInfo.find(
         (si) => si.size === item.size
       );
@@ -59,12 +60,14 @@ const Checkout = () => {
     try {
       const order = {
         user: userId,
-        orderItems: cartItems.map((item) => ({
-          product: item.product._id,
-          qty: item.quantity,
-          size: item.size,
-          color: item.color,
-        })),
+        orderItems: cartItems
+          .filter((item) => item.product) // Bỏ qua sản phẩm có giá trị null
+          .map((item) => ({
+            product: item.product._id,
+            qty: item.quantity,
+            size: item.size,
+            color: item.color,
+          })),
         shippingAddress: values.address,
         paymentMethod,
         referrerCode: user.aboutCode, // Lấy mã giới thiệu từ thông tin user
@@ -157,33 +160,35 @@ const Checkout = () => {
           )}
 
           <Title level={4}>Chi tiết đơn hàng</Title>
-          {cartItems.map((item) => (
-            <div key={item._id} className="mb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <img
-                    src={"https://api-neiko.site/" + item.product.image}
-                    alt={item.product.name}
-                    className="w-16 h-16 mr-4 rounded"
-                  />
-                  <div>
-                    <Text strong>{item.product.name}</Text>
-                    <Text className="block">
-                      {item.product.sizeInfo
-                        .find((si) => si.size === item.size)
-                        .retailPrice.toLocaleString("vi-VN")}{" "}
-                      đ x {item.quantity}
-                    </Text>
+          {cartItems
+            .filter((item) => item.product) // Bỏ qua sản phẩm có giá trị null
+            .map((item) => (
+              <div key={item._id} className="mb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <img
+                      src={"https://api-neiko.site/" + item.product.image}
+                      alt={item.product.name}
+                      className="w-16 h-16 mr-4 rounded"
+                    />
+                    <div>
+                      <Text strong>{item.product.name}</Text>
+                      <Text className="block">
+                        {item.product.sizeInfo
+                          .find((si) => si.size === item.size)
+                          .retailPrice.toLocaleString("vi-VN")}{" "}
+                        đ x {item.quantity}
+                      </Text>
+                    </div>
                   </div>
                 </div>
+                <div className="flex items-center justify-between">
+                  <Text>Size: {item.size}</Text>
+                  {/* <Text>Màu: {item.color}</Text> */}
+                </div>
+                <Divider />
               </div>
-              <div className="flex items-center justify-between">
-                <Text>Size: {item.size}</Text>
-                {/* <Text>Màu: {item.color}</Text> */}
-              </div>
-              <Divider />
-            </div>
-          ))}
+            ))}
           <div className="flex items-center justify-between">
             <Text strong>Tổng cộng:</Text>
             <Text strong>

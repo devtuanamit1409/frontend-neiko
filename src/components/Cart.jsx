@@ -44,6 +44,7 @@ const Cart = () => {
 
   const calculateTotalAmount = () => {
     return cartItems.reduce((acc, item) => {
+      if (!item.product) return acc; // Bỏ qua sản phẩm có giá trị null
       const sizeDetail = item.product.sizeInfo.find(
         (si) => si.size === item.size
       );
@@ -65,59 +66,63 @@ const Cart = () => {
         Giỏ hàng của bạn
       </Title>
       <div className="bg-white shadow-md rounded-lg p-4">
-        {cartItems.map((item) => (
-          <div
-            key={item._id}
-            className="flex flex-col md:flex-row items-center justify-between mb-4"
-          >
-            <div className="flex items-center">
-              <img
-                src={"https://api-neiko.site/" + item.product.image}
-                alt={item.product.name}
-                className="w-16 h-16 mr-4 rounded"
-              />
-              <div>
-                <Text className="block font-semibold">{item.product.name}</Text>
-                <Text className="block text-gray-500">
-                  {user.level === "client"
-                    ? item.product.sizeInfo
-                        .find((si) => si.size === item.size)
-                        .retailPrice.toLocaleString("vi-VN")
-                    : item.product.sizeInfo
-                        .find((si) => si.size === item.size)
-                        .wholesalePrice.toLocaleString("vi-VN") ||
-                      item.product.sizeInfo
-                        .find((si) => si.size === item.size)
-                        .defaultPrice.toLocaleString("vi-VN")}{" "}
-                  đ
+        {cartItems
+          .filter((item) => item.product) // Bỏ qua sản phẩm có giá trị null
+          .map((item) => (
+            <div
+              key={item._id}
+              className="flex flex-col md:flex-row items-center justify-between mb-4"
+            >
+              <div className="flex items-center">
+                <img
+                  src={"https://api-neiko.site/" + item.product.image}
+                  alt={item.product.name}
+                  className="w-16 h-16 mr-4 rounded"
+                />
+                <div>
+                  <Text className="block font-semibold">
+                    {item.product.name}
+                  </Text>
+                  <Text className="block text-gray-500">
+                    {user.level === "client"
+                      ? item.product.sizeInfo
+                          .find((si) => si.size === item.size)
+                          .retailPrice.toLocaleString("vi-VN")
+                      : item.product.sizeInfo
+                          .find((si) => si.size === item.size)
+                          .wholesalePrice.toLocaleString("vi-VN") ||
+                        item.product.sizeInfo
+                          .find((si) => si.size === item.size)
+                          .defaultPrice.toLocaleString("vi-VN")}{" "}
+                    đ
+                  </Text>
+                  <Text className="block text-gray-500">Size: {item.size}</Text>
+                </div>
+              </div>
+              <div className="flex items-center mt-2 md:mt-0">
+                <Text className="mr-2">Số lượng: {item.quantity}</Text>
+                <Button
+                  type="primary"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => handleRemoveItem(item._id)}
+                />
+              </div>
+              <div className="mt-2 md:mt-0">
+                <Text className="block font-semibold">
+                  {(user.level === "client"
+                    ? item.product.sizeInfo.find((si) => si.size === item.size)
+                        .retailPrice
+                    : item.product.sizeInfo.find((si) => si.size === item.size)
+                        .wholesalePrice ||
+                      item.product.sizeInfo.find((si) => si.size === item.size)
+                        .defaultPrice
+                  ).toLocaleString("vi-VN")}
+                  đ x {item.quantity}
                 </Text>
-                <Text className="block text-gray-500">Size: {item.size}</Text>
               </div>
             </div>
-            <div className="flex items-center mt-2 md:mt-0">
-              <Text className="mr-2">Số lượng: {item.quantity}</Text>
-              <Button
-                type="primary"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => handleRemoveItem(item._id)}
-              />
-            </div>
-            <div className="mt-2 md:mt-0">
-              <Text className="block font-semibold">
-                {(user.level === "client"
-                  ? item.product.sizeInfo.find((si) => si.size === item.size)
-                      .retailPrice
-                  : item.product.sizeInfo.find((si) => si.size === item.size)
-                      .wholesalePrice ||
-                    item.product.sizeInfo.find((si) => si.size === item.size)
-                      .defaultPrice
-                ).toLocaleString("vi-VN")}
-                đ x {item.quantity}
-              </Text>
-            </div>
-          </div>
-        ))}
+          ))}
         <div className="flex flex-col md:flex-row justify-between items-center mt-4">
           <Text className="text-lg font-bold">
             Tổng cộng: {calculateTotalAmount().toLocaleString("vi-VN")} đ
