@@ -25,7 +25,7 @@ const Checkout = () => {
   const getUserCart = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8888/api/users/${userId}`
+        `https://api-neiko.site/api/users/${userId}`
       );
       setUser(response.data.user);
       setCartItems(response.data.user.cart);
@@ -82,7 +82,7 @@ const Checkout = () => {
         note: values.note,
       };
 
-      await axios.post(`http://localhost:8888/api/orders/create`, order);
+      await axios.post(`https://api-neiko.site/api/orders/create`, order);
       notification.success({
         message: "Thành công",
         description: "Đơn hàng của bạn đã được đặt thành công",
@@ -173,7 +173,7 @@ const Checkout = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <img
-                      src={"http://localhost:8888/" + item.product.image}
+                      src={"https://api-neiko.site/" + item.product.image}
                       alt={item.product.name}
                       className="w-16 h-16 mr-4 rounded"
                     />

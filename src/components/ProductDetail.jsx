@@ -26,7 +26,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     try {
-      await axios.post(`http://localhost:8888/api/users/addtocart`, {
+      await axios.post(`https://api-neiko.site/api/users/addtocart`, {
         userId,
         productId: id,
         quantity,
@@ -47,7 +47,7 @@ const ProductDetail = () => {
   const getUser = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8888/api/users/${userId}`
+        `https://api-neiko.site/api/users/${userId}`
       );
       setUser(response.data.user);
     } catch (error) {
@@ -58,7 +58,7 @@ const ProductDetail = () => {
   const getProduct = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8888/api/products/${id}`
+        `https://api-neiko.site/api/products/${id}`
       );
       const productData = response.data.product;
       setProduct(productData);
@@ -111,7 +111,7 @@ const ProductDetail = () => {
         <div className="flex flex-wrap justify-center">
           <div className="w-full lg:w-1/2 p-2">
             <img
-              src={`http://localhost:8888/${product.image}`}
+              src={`https://api-neiko.site/${product.image}`}
               alt="Product"
               className="rounded-lg w-full"
             />

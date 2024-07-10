@@ -14,9 +14,12 @@ const Home = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8888/api/products", {
-          params: { page: currentPage, limit: pageSize },
-        });
+        const response = await axios.get(
+          "https://api-neiko.site/api/products",
+          {
+            params: { page: currentPage, limit: pageSize },
+          }
+        );
         setProducts(response.data.products);
         setTotalProducts(response.data.totalPages * pageSize);
       } catch (error) {

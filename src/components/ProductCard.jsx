@@ -21,7 +21,7 @@ const ProductCard = ({ product }) => {
   const getUser = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8888/api/users/${userId}`
+        `https://api-neiko.site/api/users/${userId}`
       );
       setUser(response.data.user);
     } catch (error) {
@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
       cover={
         <img
           alt={product.name}
-          src={"http://localhost:8888/" + product.image}
+          src={"https://api-neiko.site/" + product.image}
           className="product-image"
         />
       }

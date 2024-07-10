@@ -14,7 +14,7 @@ const Cart = () => {
   const getUser = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8888/api/users/${userId}`
+        `https://api-neiko.site/api/users/${userId}`
       );
       setUser(response.data.user);
       setCartItems(response.data.user.cart);
@@ -25,7 +25,7 @@ const Cart = () => {
 
   const handleRemoveItem = async (id) => {
     try {
-      await axios.delete(`http://localhost:8888/api/users/removecartitem`, {
+      await axios.delete(`https://api-neiko.site/api/users/removecartitem`, {
         data: { userId, itemId: id },
       });
       const newCartItems = cartItems.filter((item) => item._id !== id);
@@ -78,7 +78,7 @@ const Cart = () => {
             >
               <div className="flex items-center">
                 <img
-                  src={"http://localhost:8888/" + item.product.image}
+                  src={"https://api-neiko.site/" + item.product.image}
                   alt={item.product.name}
                   className="w-16 h-16 mr-4 rounded"
                 />
