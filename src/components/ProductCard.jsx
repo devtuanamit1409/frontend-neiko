@@ -52,7 +52,8 @@ const ProductCard = ({ product }) => {
           Giá :{" "}
           {user && user.level === "client"
             ? formatCurrency(product.sizeInfo[0].retailPrice)
-            : formatCurrency(product.sizeInfo[0].wholesalePrice)}
+            : formatCurrency(product.sizeInfo[0].wholesalePrice) ||
+              formatCurrency(product.sizeInfo[0].defaultPrice)}
         </div>
         {/* <div className="wholesale-price">
           Giá sỉ: {formatCurrency(product.wholesalePrice)}

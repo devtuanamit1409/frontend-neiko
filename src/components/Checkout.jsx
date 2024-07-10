@@ -146,13 +146,13 @@ const Checkout = () => {
           {paymentMethod === "bank" && (
             <div className="bg-gray-100 p-4 rounded-lg">
               <Text strong>Số tài khoản: </Text>
-              <Text>123456789</Text>
+              <Text>101981064</Text>
               <br />
               <Text strong>Tên chủ tài khoản: </Text>
-              <Text>Nguyen Van A</Text>
+              <Text>Hà Bảo Yến</Text>
               <br />
               <Text strong>Ngân hàng: </Text>
-              <Text>ABC Bank</Text>
+              <Text>VietCombank</Text>
             </div>
           )}
 
@@ -179,7 +179,7 @@ const Checkout = () => {
               </div>
               <div className="flex items-center justify-between">
                 <Text>Size: {item.size}</Text>
-                <Text>Màu: {item.color}</Text>
+                {/* <Text>Màu: {item.color}</Text> */}
               </div>
               <Divider />
             </div>

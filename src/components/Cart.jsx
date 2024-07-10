@@ -50,7 +50,7 @@ const Cart = () => {
       const price =
         user.level === "client"
           ? sizeDetail.retailPrice
-          : sizeDetail.wholesalePrice;
+          : sizeDetail.wholesalePrice || sizeDetail.defaultPrice;
       return acc + price * item.quantity;
     }, 0);
   };
@@ -85,12 +85,13 @@ const Cart = () => {
                         .retailPrice.toLocaleString("vi-VN")
                     : item.product.sizeInfo
                         .find((si) => si.size === item.size)
-                        .wholesalePrice.toLocaleString("vi-VN")}{" "}
+                        .wholesalePrice.toLocaleString("vi-VN") ||
+                      item.product.sizeInfo
+                        .find((si) => si.size === item.size)
+                        .defaultPrice.toLocaleString("vi-VN")}{" "}
                   đ
                 </Text>
-                <Text className="block text-gray-500">
-                  Size: {item.size}, Color: {item.color}
-                </Text>
+                <Text className="block text-gray-500">Size: {item.size}</Text>
               </div>
             </div>
             <div className="flex items-center mt-2 md:mt-0">
@@ -108,7 +109,9 @@ const Cart = () => {
                   ? item.product.sizeInfo.find((si) => si.size === item.size)
                       .retailPrice
                   : item.product.sizeInfo.find((si) => si.size === item.size)
-                      .wholesalePrice
+                      .wholesalePrice ||
+                    item.product.sizeInfo.find((si) => si.size === item.size)
+                      .defaultPrice
                 ).toLocaleString("vi-VN")}
                 đ x {item.quantity}
               </Text>

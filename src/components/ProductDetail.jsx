@@ -19,7 +19,6 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const userId = localStorage.getItem("userId");
   const [user, setUser] = useState({});
-
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState(null);
   const [color, setColor] = useState(null);
@@ -27,16 +26,12 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     try {
-      const response = await axios.post(
-        `https://api-neiko.site/api/users/addtocart`,
-        {
-          userId,
-          productId: id,
-          quantity,
-          size,
-          color,
-        }
-      );
+      await axios.post(`https://api-neiko.site/api/users/addtocart`, {
+        userId,
+        productId: id,
+        quantity,
+        size,
+      });
       notification.success({
         message: "Thành công",
         description: "Sản phẩm đã được thêm vào giỏ hàng",
@@ -75,13 +70,16 @@ const ProductDetail = () => {
     }
   };
 
-  const updatePrice = (size, level) => {
+  const updatePrice = (selectedSize, level) => {
     if (!product) return;
-    const selectedSize = product.sizeInfo.find((s) => s.size === size);
+    console.log("Updating price for size:", selectedSize, "and level:", level);
+    const sizeInfo = product.sizeInfo.find((s) => s.size === selectedSize);
+    console.log("Selected size info:", sizeInfo);
     const newPrice =
       level === "client"
-        ? selectedSize.retailPrice
-        : selectedSize.wholesalePrice;
+        ? sizeInfo.retailPrice
+        : sizeInfo.wholesalePrice || sizeInfo.defaultPrice;
+    console.log("New price:", newPrice);
     setPrice(newPrice);
   };
 
@@ -132,13 +130,14 @@ const ProductDetail = () => {
               <div className="mt-4">
                 <Space direction="vertical" size="large" className="w-full">
                   <div className="mb-4">
-                    <Text strong>Chọn size:</Text>
+                    <Text strong>Chọn mã:</Text>
                     <Radio.Group
                       className="ml-2"
                       value={size}
                       onChange={(e) => {
-                        setSize(e.target.value);
-                        updatePrice(e.target.value, user.level);
+                        const newSize = e.target.value;
+                        setSize(newSize);
+                        updatePrice(newSize, user.level);
                       }}
                     >
                       {product.sizeInfo.map((size) => (
@@ -148,24 +147,6 @@ const ProductDetail = () => {
                           className="custom-radio-button"
                         >
                           {size.size}
-                        </Radio.Button>
-                      ))}
-                    </Radio.Group>
-                  </div>
-                  <div className="mb-4">
-                    <Text strong>Chọn màu sắc:</Text>
-                    <Radio.Group
-                      className="ml-2"
-                      value={color}
-                      onChange={(e) => setColor(e.target.value)}
-                    >
-                      {product.colorInfo.map((color) => (
-                        <Radio.Button
-                          key={color._id}
-                          value={color.color}
-                          className="custom-radio-button"
-                        >
-                          {color.color}
                         </Radio.Button>
                       ))}
                     </Radio.Group>
