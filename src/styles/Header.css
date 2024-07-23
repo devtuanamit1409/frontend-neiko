@@ -2,46 +2,121 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #001529; /* Màu nền header */
+  background: #001529;
   padding: 0 20px;
-  height: 64px; /* Chiều cao của header */
-  position: fixed;
-  width: 100%;
-  z-index: 1000;
+  position: sticky;
   top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+.logo-container {
+  flex: 1;
 }
 
 .logo {
-  font-size: 24px;
   color: #fff;
-  flex: 0 0 auto;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.search-container {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+}
+
+.menu-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .menu {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  flex-grow: 1;
   background: none;
   border-bottom: none;
-  height: 100%;
 }
 
 .menu-item {
+  margin-left: 20px;
+  color: #fff;
+}
+
+.mobile-menu-button {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    display: none;
+  }
+
+  .menu-container {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+}
+
+.drawer-search-input {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.drawer-menu-item {
   display: flex;
   align-items: center;
-  border-bottom: none;
-  height: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #000;
+  transition: background 0.3s;
 }
 
-.menu .ant-menu-item {
-  border-bottom: none;
+.drawer-menu-item a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: #000;
+  text-decoration: none;
 }
 
-.menu .ant-menu-item:hover {
-  background: none;
+.drawer-menu-item a:hover {
+  color: #1890ff;
 }
 
-.menu .ant-menu-item .anticon {
-  vertical-align: middle;
+.drawer-menu-item svg {
+  margin-right: 10px;
+  font-size: 20px;
+  color: #1890ff;
+}
+
+.drawer-menu-text {
+  font-size: 16px;
+  color: #000;
+}
+
+.drawer-menu-item:hover {
+  background: #f0f0f0;
+}
+
+.drawer {
+  .ant-drawer-header {
+    background-color: #001529;
+  }
+
+  .ant-drawer-title {
+    color: #fff;
+  }
+
+  .ant-drawer-close {
+    color: #fff;
+  }
 }

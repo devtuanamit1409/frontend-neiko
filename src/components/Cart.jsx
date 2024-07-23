@@ -24,6 +24,8 @@ const Cart = () => {
   };
 
   const handleRemoveItem = async (id) => {
+    console.log("User ID:", userId); // Kiểm tra giá trị của userId
+    console.log("Item ID:", id); // Kiểm tra giá trị của itemId
     try {
       await axios.delete(`https://api-neiko.site/api/users/removecartitem`, {
         data: { userId, itemId: id },
