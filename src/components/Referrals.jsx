@@ -14,7 +14,7 @@ const Referrals = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "https://api-neiko.site/api/users/get-referred-users/669f58bf5cc69e6d68f76d67"
+          `https://api-neiko.site/api/users/get-referred-users/${userId}`
         );
         setReferredUsers(response.data.referredUsers);
         message.success(response.data.message);
