@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Card, message, Button, Modal, Tag } from "antd";
 import axios from "axios";
 
@@ -8,13 +8,13 @@ const Referrals = () => {
   const [visible, setVisible] = useState(false);
   const [orders, setOrders] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-
+  const userIdLOC = localStorage.getItem("userId");
   useEffect(() => {
     const fetchReferredUsers = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://api-neiko.site/api/users/get-referred-users/${userId}`
+          `https://api-neiko.site/api/users/get-referred-users/${userIdLOC}`
         );
         setReferredUsers(response.data.referredUsers);
         message.success(response.data.message);
